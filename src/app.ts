@@ -5,7 +5,7 @@ const app: Application = express();
 const port = process.env.PORT || 8080;
 
 app.get("/api/v1/test", async (_req: Request, res: Response) => {
-  res.status(200).json({ message: "API running" });
+  res.status(200).json({ message: "API running" }).send("API running");
 });
 
 app.listen(port, () => {
