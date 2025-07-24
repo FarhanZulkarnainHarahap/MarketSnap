@@ -90,6 +90,6 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
 
 app.listen(port, () => {
   console.info(
-    `🚀 Server is running on https://market-snap.vercel.apphost:${port}`
+    `🚀 Server is running on https://market-snap.vercel.app:${port}`
   );
 });
