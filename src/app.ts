@@ -4,7 +4,7 @@ import express, { Request, Response, Application } from "express";
 const app: Application = express();
 const port = process.env.PORT || 8080;
 
-app.get("/", async (_req: Request, res: Response) => {
+app.get("/", async (req: Request, res: Response) => {
   res.status(200).json({ message: "API running" }).send("API running");
 });
 
