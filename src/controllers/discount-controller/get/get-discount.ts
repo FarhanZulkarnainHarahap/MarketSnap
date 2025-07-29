@@ -1,30 +1,37 @@
 import { Request, Response } from "express";
 import prisma from "../../../config/prisma-client.js";
-import { CustomJwtPayload } from "@/types/express.js";
-import { Prisma } from "@/generated/prisma/index.js";
+import { Prisma } from "../../../generated/prisma/index.js"; // ✅ Perbaikan dari alias error
+import { CustomJwtPayload } from "../../../types/express.js"; // ✅ Pakai relative path, bukan '@/'
 
 const buildDiscountWhereClause = async (
   user: CustomJwtPayload,
-  additionalFilters: any = {}
-) => {
-  let whereClause = { deletedAt: null, ...additionalFilters };
+  additionalFilters: Prisma.DiscountWhereInput = {}
+): Promise<Prisma.DiscountWhereInput> => {
+  const whereClause: Prisma.DiscountWhereInput = {
+    deletedAt: null,
+    ...additionalFilters,
+  };
 
   if (user.role === "STORE_ADMIN") {
-    const userStores = await prisma.store.findMany({
+    const userStores: { id: string }[] = await prisma.store.findMany({
       where: { userId: user.id },
       select: { id: true },
     });
-    whereClause.storeId = { in: userStores.map((store) => store.id) };
+
+    whereClause.storeId = {
+      in: userStores.map((store: { id: string }) => store.id),
+    };
   }
 
   return whereClause;
 };
+
 const getPaginationData = (
   page: string | undefined,
   limit: string | undefined
 ) => {
-  const pageNum = parseInt(page as string) || 1;
-  const limitNum = parseInt(limit as string) || 10;
+  const pageNum = parseInt(page ?? "") || 1;
+  const limitNum = parseInt(limit ?? "") || 10;
   const skip = (pageNum - 1) * limitNum;
   return { pageNum, limitNum, skip };
 };
@@ -44,9 +51,11 @@ export async function getDiscounts(req: Request, res: Response): Promise<void> {
     );
 
     const additionalFilters: Prisma.DiscountWhereInput = {};
+
     if (storeId && user.role === "SUPER_ADMIN") {
       additionalFilters.storeId = storeId as string;
     }
+
     if (productId) {
       additionalFilters.productId = productId as string;
     }
@@ -129,16 +138,16 @@ export async function getDiscountUsageReport(
       limit as string
     );
 
-    // Build where clause for discount usage
-    let whereClause: Prisma.DiscountUsageWhereInput = {};
+    const whereClause: Prisma.DiscountUsageWhereInput = {};
 
     if (user.role === "STORE_ADMIN") {
-      const userStores = await prisma.store.findMany({
+      const userStores: { id: string }[] = await prisma.store.findMany({
         where: { userId: user.id },
         select: { id: true },
       });
+
       whereClause.Discount = {
-        storeId: { in: userStores.map((store) => store.id) },
+        storeId: { in: userStores.map((store: { id: string }) => store.id) },
         deletedAt: null,
       };
     } else {
@@ -148,7 +157,6 @@ export async function getDiscountUsageReport(
       }
     }
 
-    // Date range filter
     if (startDate || endDate) {
       whereClause.createdAt = {};
       if (startDate) whereClause.createdAt.gte = new Date(startDate as string);
@@ -184,13 +192,13 @@ export async function getDiscountUsageReport(
       }),
     ]);
 
-    const totalPages = Math.ceil(totalItems / limitNum);
-
-    // Calculate summary
     const totalDiscountAmount = usageData.reduce(
-      (sum, usage) => sum + parseFloat(usage.totalAmount.toString()),
+      (sum: number, usage: { totalAmount: Prisma.Decimal }) =>
+        sum + usage.totalAmount.toNumber(),
       0
     );
+
+    const totalPages = Math.ceil(totalItems / limitNum);
 
     res.status(200).json({
       message: "Discount usage report retrieved successfully",

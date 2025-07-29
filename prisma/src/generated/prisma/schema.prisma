@@ -1,0 +1,325 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  STORE_ADMIN
+  SUPER_ADMIN
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum InventoryAction {
+  RESTOCK
+  SALE
+  ADD
+}
+
+model User {
+  id                  String    @id @default(uuid())
+  firstName           String?
+  lastName            String?
+  email               String    @unique
+  username            String?   @unique
+  password            String?
+  phoneNumber         String?   @unique
+  role                Role      @default(USER)
+  createdAt           DateTime  @default(now())
+  provider            String?
+  resetToken          String?
+  resetTokenExpiresAt DateTime?
+  isVerified          Boolean   @default(false) // Status verifikasi, default false
+  verificationToken   String? // Token verifikasi
+
+  Store            Store[]
+  DiscountUsage    DiscountUsage[]
+  InventoryJournal InventoryJournal[]
+  Cart             Cart[]
+  Order            Order[]
+  Product          Product[]
+  UserAddress      UserAddress[]
+  StoreUser        StoreUser[]
+}
+
+model UserAddress {
+  id        String  @id @default(uuid())
+  userId    String
+  recipient String
+  isPrimary Boolean @default(false)
+
+  User    User      @relation(fields: [userId], references: [id])
+  Address Address[]
+}
+
+model Address {
+  id             String   @id @default(uuid())
+  address        String
+  destination    String
+  destinationId  Int?
+  city           String
+  province       String
+  postalCode     String
+  storeAddressId String?
+  storeId        String?
+  isPrimary      Boolean  @default(false) // Optional: could be removed
+  createdAt      DateTime @default(now())
+
+  StoreAddress  StoreAddress? @relation(fields: [storeAddressId], references: [id])
+  UserAddresses UserAddress[] // <-- many userAddresses refer to this Address
+  Order         Order[]
+}
+
+model StoreUser {
+  id        String   @id @default(uuid())
+  storeId   String?
+  userId    String
+  createdAt DateTime @default(now())
+
+  Store Store? @relation(fields: [storeId], references: [id])
+  User  User   @relation(fields: [userId], references: [id])
+}
+
+model StoreAddress {
+  id        String @id @default(uuid())
+  storeId   String
+  latitude  Float
+  longitude Float
+
+  createdAt DateTime @default(now())
+
+  Address Address[]
+  Store   Store     @relation(fields: [storeId], references: [id])
+}
+
+model Store {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  userId    String?
+  // Added: longitude for geographical location
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  distance  Float?
+
+  User User? @relation(fields: [userId], references: [id])
+
+  Discounts    Discount[]
+  Inventory    InventoryJournal[]
+  StoreProduct StoreProduct[]
+  StoreAddress StoreAddress[]
+  StoreUser    StoreUser[]
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  userId      String
+  description String
+  price       Float
+  weight      Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  User User @relation(fields: [userId], references: [id])
+
+  ProductCategory  ProductCategory[]
+  Discount         Discount[]
+  InventoryJournal InventoryJournal[]
+  CartItem         CartItem[]
+  OrderItem        OrderItem[]
+  StoreProduct     StoreProduct[]
+  Image            Image[]
+  imagePreview     Image[]            @relation("imagePreview")
+  imageContent     Image[]            @relation("imageContent")
+}
+
+model StoreProduct {
+  productId String
+  storeId   String
+  stock     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  Product Product @relation(fields: [productId], references: [id])
+  Store   Store   @relation(fields: [storeId], references: [id])
+
+  @@id([productId, storeId])
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  ProductCategory ProductCategory[]
+}
+
+model Image {
+  id               String   @id @default(uuid())
+  imageUrl         String
+  previewProductId String?
+  contentProductId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  previewProduct Product? @relation("imagePreview", fields: [previewProductId], references: [id])
+  contentProduct Product? @relation("imageContent", fields: [contentProductId], references: [id])
+  Product        Product? @relation(fields: [ProductId], references: [id])
+  ProductId      String?
+}
+
+model ProductCategory {
+  id         String    @id @default(uuid())
+  productId  String
+  categoryId String
+  deletedAt  DateTime?
+
+  Product  Product  @relation(fields: [productId], references: [id])
+  Category Category @relation(fields: [categoryId], references: [id])
+}
+
+model Discount {
+  id           String       @id @default(uuid())
+  storeId      String
+  productId    String
+  value        Decimal
+  discountType DiscountType
+  minPurchase  Decimal
+  maxDiscount  Decimal
+  startDate    DateTime
+  endDate      DateTime
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deletedAt    DateTime?
+
+  Store         Store           @relation(fields: [storeId], references: [id])
+  Product       Product         @relation(fields: [productId], references: [id])
+  DiscountUsage DiscountUsage[]
+}
+
+model DiscountUsage {
+  id          String   @id @default(uuid())
+  userId      String
+  discountId  String
+  totalAmount Decimal
+  createdAt   DateTime @default(now())
+
+  User     User     @relation(fields: [userId], references: [id])
+  Discount Discount @relation(fields: [discountId], references: [id])
+}
+
+model InventoryJournal {
+  id        String          @id @default(uuid())
+  storeId   String
+  productId String
+  quantity  String
+  weight    Float
+  action    InventoryAction
+  userId    String
+  createdAt DateTime        @default(now())
+
+  Store   Store   @relation(fields: [storeId], references: [id])
+  Product Product @relation(fields: [productId], references: [id])
+  User    User    @relation(fields: [userId], references: [id])
+  Order   Order[]
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  MIDTRANS
+  MANUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User     User       @relation(fields: [userId], references: [id])
+  CartItem CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int      @default(1)
+  unitPrice Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Cart    Cart    @relation(fields: [cartId], references: [id])
+  Product Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  userId          String
+  orderNumber     String      @unique
+  status          OrderStatus @default(PENDING)
+  subTotal        Float
+  shippingTotal   Float
+  totalPrice      Float
+  paymentMethod   String
+  proofImageUrl   String?
+  shippingOptions Json
+  addressId       String
+  isDone          Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  Address            Address           @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  User               User              @relation(fields: [userId], references: [id])
+  OrderItem          OrderItem[]
+  InventoryJournal   InventoryJournal? @relation(fields: [inventoryJournalId], references: [id])
+  inventoryJournalId String?
+  // Payment            Payment?
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  unitPrice Float
+  quantity  Int
+  total     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Order   Order   @relation(fields: [orderId], references: [id])
+  Product Product @relation(fields: [productId], references: [id])
+}
