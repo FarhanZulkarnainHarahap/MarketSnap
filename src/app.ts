@@ -17,12 +17,12 @@ import discountRouter from "./routers/discount-router.js";
 import categoryRouter from "./routers/category-router.js"; // Ganti dengan categoryRouter jika ada
 import rajaOngkirRouter from "./routers/rajaongkir-router.js";
 import checkoutManualRouter from "./routers/checkout-router.js";
-// import paymentRouter from "./routers/payment-router.js";
+// import paymentRouter from "./routers/payment-router.js.";
 
 import "./config/passport.js"; // konfigurasi strategi Passport (GoogleStrategy)
 
 const app: Application = express();
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 // CORS config
 app.use(
@@ -75,9 +75,6 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/rajaongkir", rajaOngkirRouter);
 // Health check
-app.get("/", async (_req: Request, res: Response) => {
-  res.status(200).send("Market Snap API is running! 🚀");
-});
 
 app.get("/confirm-email-view", (req: Request, res: Response) => {
   const token = req.query.token as string; // you can also get this from database/session if needed
@@ -88,8 +85,16 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
   });
 });
 
-app.listen(port, () => {
-  console.info(
-    `🚀 Server is running on https://market-snap.vercel.app:${port}`
-  );
+app.get("/", async (_req: Request, res: Response) => {
+  res
+    .send("Market Snap API is running! 🚀")
+    .status(200)
+    .json({
+      message: "API is running",
+      uptime: `${process.uptime().toFixed(2)} seconds`,
+    });
 });
+app.listen(PORT, () =>
+  console.info(` 🚀 Server is listening on port: ${PORT}`)
+);
+export default app;

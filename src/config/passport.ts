@@ -59,8 +59,8 @@ passport.use(
           provider: "google",
           accessToken,
           name: {
-            givenName: user.firstName,
-            familyName: user.lastName,
+            givenName: user.firstName ?? "", // pastikan string
+            familyName: user.lastName ?? "", // pastikan string
           },
           _json: data,
           _raw: JSON.stringify(data),

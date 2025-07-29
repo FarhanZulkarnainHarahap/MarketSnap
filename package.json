@@ -4,14 +4,15 @@
   "description": "",
   "main": "src/app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server",
-    "vercel-build": "prisma generate && prisma db push"
+    "build": "tsc",
+    "dev": "NODE_ENV=development && tsx --watch src/app.ts",
+    "start": "NODE_ENV=production && node src/app.js",
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "Farhan Nexxus",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie-parser": "^1.4.9",
