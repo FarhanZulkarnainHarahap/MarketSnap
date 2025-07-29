@@ -85,7 +85,7 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
   });
 });
 
-app.get("/", async (_req: Request, res: Response) => {
+app.get("/", async (req: Request, res: Response) => {
   res
     .send("Market Snap API is running! 🚀")
     .status(200)
