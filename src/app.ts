@@ -85,7 +85,7 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
   });
 });
 
-app.get("/", async (request: Request, response: Response) => {
+app.get("/api/health", async (request: Request, response: Response) => {
   response.status(200).json({
     message: "API is running",
     uptime: `${process.uptime().toFixed(2)} seconds`,
