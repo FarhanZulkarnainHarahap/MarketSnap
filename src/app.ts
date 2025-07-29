@@ -22,7 +22,7 @@ import checkoutManualRouter from "./routers/checkout-router.js";
 import "./config/passport.js"; // konfigurasi strategi Passport (GoogleStrategy)
 
 const app: Application = express();
-const PORT = process.env.PORT || 8080;
+const PORT: string = process.env.PORT || "8000";
 
 // CORS config
 app.use(
