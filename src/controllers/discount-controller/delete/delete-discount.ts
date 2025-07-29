@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
-import { Prisma, PrismaClient } from "@/generated/prisma/index.js";
+import { prisma } from "../../../config/prisma-client.js";
+
 import { CustomJwtPayload } from "../../../types/express.js";
 
 export async function deleteDiscount(

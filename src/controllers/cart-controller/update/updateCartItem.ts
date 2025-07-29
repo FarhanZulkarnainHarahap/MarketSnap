@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 
 export async function updateCartItem(req: Request, res: Response) {
   try {
@@ -8,7 +8,7 @@ export async function updateCartItem(req: Request, res: Response) {
     const { quantity } = req.body;
 
     if (!quantity || quantity < 1) {
-      res.status(400).json({ message: "Quantity must be ≥ 1" });
+      res.status(400).json({ message: "Quantity must be ≥ 1" });
     }
 
     const line = await prisma.cartItem.findUnique({

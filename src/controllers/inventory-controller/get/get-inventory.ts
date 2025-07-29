@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 import { InventoryAction } from "../../../generated/prisma/index.js";
 import { CustomJwtPayload } from "@/types/express.js";
 

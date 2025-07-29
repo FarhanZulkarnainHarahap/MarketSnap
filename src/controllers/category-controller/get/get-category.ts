@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 
 export async function getAllCategories(_req: Request, res: Response) {
   try {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import jwt from "jsonwebtoken";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 import bcrypt from "bcryptjs";
 import { Resend } from "resend";
 import fs from "fs/promises";

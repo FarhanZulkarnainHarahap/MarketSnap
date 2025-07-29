@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 
 export async function updateAddress(req: Request, res: Response) {
   const { id } = req.params;

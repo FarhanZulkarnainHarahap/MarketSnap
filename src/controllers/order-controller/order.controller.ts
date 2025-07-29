@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import cloudinary from "../../config/cloudinary-config.js";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../config/prisma-client.js";
 import { MidtransClient } from "midtrans-node-client";
 import fetch from "node-fetch";
 

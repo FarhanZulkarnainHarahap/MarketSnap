@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 import fs from "fs/promises";
 import handlebars from "handlebars";
 import { Resend } from "resend";

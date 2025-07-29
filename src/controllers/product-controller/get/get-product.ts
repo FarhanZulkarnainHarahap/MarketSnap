@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 
 // GET ALL PRODUCT
 export async function getAllProduct(req: Request, res: Response) {

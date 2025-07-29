@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "@/config/prisma-client.js";
+import { prisma } from "../../../config/prisma-client.js";
 
 export async function getOrCreateCart(userId: string) {
   const existing = await prisma.cart.findFirst({
