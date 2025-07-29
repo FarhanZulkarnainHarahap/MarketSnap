@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Profile } from "passport";
-import prisma from "../../../config/prisma-client.js";
+import { prisma } from "@/config/prisma-client.js";
 
 export async function loginSuccess(req: Request, res: Response) {
   if (!req.user) {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import prisma from "../../../config/prisma-client.js";
+import { prisma } from "@/config/prisma-client.js";
 
 // Get a store by its ID along with its associated products
 

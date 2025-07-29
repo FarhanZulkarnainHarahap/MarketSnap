@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import prisma from "../../../config/prisma-client.js";
+import { prisma } from "@/config/prisma-client.js";
 import { CustomJwtPayload } from "../../../types/express.js";
 import cloudinary from "../../../config/cloudinary-config.js";
 import fs from "fs/promises";

@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import prisma from "../../../config/prisma-client.js";
-import { CustomJwtPayload } from "../../../types/express";
-import { InventoryAction } from "../../../generated/prisma";
-
+import { prisma } from "@/config/prisma-client.js";
+import { InventoryAction } from "../../../generated/prisma/index.js";
+import { CustomJwtPayload } from "@/types/express.js";
 export const updateStockOperation = async (
   storeId: string,
   productId: string,

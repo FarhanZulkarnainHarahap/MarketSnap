@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { CustomJwtPayload } from "../types/express.js";
 import { GoogleProfileWithToken } from "../types/GoogleProfileWithToken .js";
 import axios from "axios";
-import prisma from "./prisma-client.js";
+import { prisma } from "@/config/prisma-client.js";
 
 dotenv.config(); // ⛳ WAJIB agar .env bisa digunakan
 

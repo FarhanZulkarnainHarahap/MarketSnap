@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import prisma from "../../../config/prisma-client.js";
+import { prisma } from "@/config/prisma-client.js";
 import { getOrCreateCart } from "../get/cart.js";
 
 export async function addToCart(req: Request, res: Response) {
