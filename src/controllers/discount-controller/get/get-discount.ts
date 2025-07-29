@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { CustomJwtPayload } from "../../../types/express";
 import prisma from "../../../config/prisma-client.js";
+import { CustomJwtPayload } from "@/types/express.js";
+import { Prisma } from "@/generated/prisma/index.js";
 
 const buildDiscountWhereClause = async (
   user: CustomJwtPayload,
@@ -42,12 +43,14 @@ export async function getDiscounts(req: Request, res: Response): Promise<void> {
       limit as string
     );
 
-    const additionalFilters: any = {};
-    if (storeId && user.role === "SUPER_ADMIN")
-      additionalFilters.storeId = storeId;
-    if (productId) additionalFilters.productId = productId;
+    const additionalFilters: Prisma.DiscountWhereInput = {};
+    if (storeId && user.role === "SUPER_ADMIN") {
+      additionalFilters.storeId = storeId as string;
+    }
+    if (productId) {
+      additionalFilters.productId = productId as string;
+    }
 
-    // Filter untuk active/expired discounts
     if (isActive === "true") {
       additionalFilters.endDate = { gte: new Date() };
       additionalFilters.startDate = { lte: new Date() };
@@ -127,7 +130,7 @@ export async function getDiscountUsageReport(
     );
 
     // Build where clause for discount usage
-    let whereClause: any = {};
+    let whereClause: Prisma.DiscountUsageWhereInput = {};
 
     if (user.role === "STORE_ADMIN") {
       const userStores = await prisma.store.findMany({
