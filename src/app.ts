@@ -85,14 +85,11 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
   });
 });
 
-app.get("/", async (req: Request, res: Response) => {
-  res
-    .send("Market Snap API is running! 🚀")
-    .status(200)
-    .json({
-      message: "API is running",
-      uptime: `${process.uptime().toFixed(2)} seconds`,
-    });
+app.get("/", async (request: Request, response: Response) => {
+  response.status(200).json({
+    message: "API is running",
+    uptime: `${process.uptime().toFixed(2)} seconds`,
+  });
 });
 app.listen(PORT, () =>
   console.info(` 🚀 Server is listening on port: ${PORT}`)
