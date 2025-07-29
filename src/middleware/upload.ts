@@ -1,26 +1,31 @@
-// upload.ts
 import express from "express";
 import multer from "multer";
 import cloudinary from "../config/cloudinary-config.js";
-import fs from "fs";
-import path from "path";
+import { UploadApiResponse } from "cloudinary";
+import streamifier from "streamifier";
 
 const router = express.Router();
-
-// Store file temporarily on disk
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/upload", upload.single("paymentProof"), async (req, res) => {
   try {
-    const data = JSON.parse(req.body.data); // your object sent as JSON string
-    const filePath = req.file.path;
+    const data = JSON.parse(req.body.data);
 
-    const result = await cloudinary.uploader.upload(filePath, {
-      folder: "upload-payment-proof",
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).json({ error: "No file uploaded." });
+    }
+
+    const result: UploadApiResponse = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "upload-payment-proof" },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result as UploadApiResponse);
+        }
+      );
+
+      streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
     });
-
-    // Optionally delete the file after upload
-    fs.unlinkSync(filePath);
 
     res.json({
       message: "Uploaded successfully",
