@@ -10,33 +10,35 @@ import path from "path";
 const router = express.Router();
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+export const upload = multer({ storage });
 
 router.post("/upload", upload.single("paymentProof"), async (req, res) => {
   try {
-    if (!req.file || !req.file.buffer) {
-      return res.status(400).json({ error: "No file uploaded." });
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
     }
 
     const data = JSON.parse(req.body.data);
+    const fileBuffer = req.file.buffer;
 
-    const result: UploadApiResponse = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        { folder: "upload-payment-proof" },
-        (error, result) => {
-          if (error || !result) return reject(error);
-          resolve(result as UploadApiResponse);
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: "upload-payment-proof" },
+      (error, result) => {
+        if (error) {
+          return res
+            .status(500)
+            .json({ error: "Upload failed", details: error });
         }
-      );
 
-      streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
-    });
+        res.json({
+          message: "Uploaded successfully",
+          imageUrl: result?.secure_url,
+          data,
+        });
+      }
+    );
 
-    res.json({
-      message: "Uploaded successfully",
-      imageUrl: result.secure_url,
-      data,
-    });
+    streamifier.createReadStream(fileBuffer).pipe(uploadStream);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Upload failed" });
