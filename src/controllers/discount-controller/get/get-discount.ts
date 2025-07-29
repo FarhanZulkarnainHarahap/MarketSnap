@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "@/config/prisma-client.js"; // ✅ Perbaikan dari alias error
 import { Prisma } from "@/generated/prisma/index.js";
-// ✅ Perbaikan dari alias error
 import { CustomJwtPayload } from "../../../types/express.js"; // ✅ Pakai relative path, bukan '@/'
 
 const buildDiscountWhereClause = async (
