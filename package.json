@@ -7,8 +7,7 @@
     "build": "tsc",
     "dev": "NODE_ENV=development && tsx --watch src/app.ts",
     "start": "NODE_ENV=production && node src/app.js",
-    "seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "Farhan Nexxus",
