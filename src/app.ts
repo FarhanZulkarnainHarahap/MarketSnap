@@ -27,8 +27,9 @@ const PORT: string = process.env.PORT || "8000";
 // CORS config
 app.use(
   cors({
-    origin: "http://localhost:3000/", // ganti dengan domain frontend kamu
-    credentials: true,
+     origin: ["http://localhost:3000", "https://market-snap.vercel.app"],  // Menambahkan localhost untuk development
+  methods: ["GET", "POST", "PUT", "DELETE"],  // Atur metode HTTP yang diizinkan
+  credentials: true,  // Mengizinkan pengiriman cookies dan headers
   })
 );
 
