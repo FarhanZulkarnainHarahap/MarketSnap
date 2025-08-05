@@ -67,11 +67,10 @@ export async function loginGoogle(req: Request, res: Response) {
         role: user.role,
         isVerified: user.isVerified,
       },
-      process.env.JWT_SECRET!,
-      { expiresIn: "1d" }
+      process.env.JWT_SECRET!
     );
 
-    res.cookie("accessToken", accesstoken, { httpOnly: true, secure: false });
+    res.cookie("accessToken", accesstoken, { httpOnly: true, secure: true });
     res.redirect("http://localhost:3000");
     return;
   } catch (error) {

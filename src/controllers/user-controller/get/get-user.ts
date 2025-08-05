@@ -145,7 +145,8 @@ export async function getCurrentUser(
         email: true,
         username: true,
         phoneNumber: true,
-        isVerified: true, // Check if the user is verified
+        isVerified: true,
+        role: true, // Check if the user is verified
       },
     });
 
