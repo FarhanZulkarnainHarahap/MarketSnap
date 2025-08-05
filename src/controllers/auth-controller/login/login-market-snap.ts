@@ -55,8 +55,9 @@ export async function login(req: Request, res: Response) {
     res
       .cookie("accessToken", jwtToken, {
         httpOnly: true,
-        secure: true,
-        // secure: process.env.NODE_ENV === "production" , // hanya secure di production
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/", // hanya secure di production
       })
       .status(200)
       .json({
