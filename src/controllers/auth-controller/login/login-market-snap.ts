@@ -36,24 +36,24 @@ export async function login(req: Request, res: Response) {
     }
 
     // Generate JWT token
-    const jwtToken = jwt.sign(
+    const accesstoken = jwt.sign(
       {
         id: existingUser.id,
         username: existingUser.username,
         email: existingUser.email,
         role: existingUser.role,
       },
-      process.env.JWT_SECRET as string
+      process.env.JWT_SECRET!
     );
 
-    if (!jwtToken) {
+    if (!accesstoken) {
       res.status(500).json({ message: "Failed to generate token" });
       return;
     }
 
     // Set cookie dan kirim response dengan role
     res
-      .cookie("accessToken", jwtToken, { httpOnly: true })
+      .cookie("accessToken", accesstoken, { httpOnly: true, secure: false })
       .status(200)
       .json({ message: "Login success" });
   } catch (error) {
