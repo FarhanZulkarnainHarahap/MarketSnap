@@ -27,9 +27,9 @@ const PORT: string = process.env.PORT || "8000";
 // CORS config
 app.use(
   cors({
-     origin: ["http://localhost:3000", "https://market-snap.vercel.app"],  // Menambahkan localhost untuk development
-  methods: ["GET", "POST", "PUT", "DELETE"],  // Atur metode HTTP yang diizinkan
-  credentials: true,  // Mengizinkan pengiriman cookies dan headers
+    origin: ["http://localhost:3000", "https://market-snap.vercel.app"], // Menambahkan localhost untuk development
+    methods: ["GET", "POST", "PUT", "DELETE"], // Atur metode HTTP yang diizinkan
+    credentials: true, // Mengizinkan pengiriman cookies dan headers
   })
 );
 
@@ -85,7 +85,12 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
     apiBaseUrl: process.env.NEXT_PUBLIC_DOMAIN,
   });
 });
-
+app.get("/", async (request: Request, response: Response) => {
+  response.send({
+    message: "API is running",
+    uptime: `${process.uptime().toFixed(2)} seconds`,
+  });
+});
 app.get("/api/health", async (request: Request, response: Response) => {
   response.status(200).json({
     message: "API is running",
