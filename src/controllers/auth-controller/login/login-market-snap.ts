@@ -53,18 +53,9 @@ export async function login(req: Request, res: Response) {
 
     // Set cookie dan kirim response dengan role
     res
-      .cookie("accessToken", jwtToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/", 
-         maxAge: 7 * 24 * 60 * 60 * 1000,// hanya secure di production
-      })
+      .cookie("accessToken", jwtToken, { httpOnly: true })
       .status(200)
-      .json({
-        message: "Login success",
-        role: existingUser.role, // ⬅️ kirim role ke frontend
-      });
+      .json({ message: "Login success" });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Login failed", error });
