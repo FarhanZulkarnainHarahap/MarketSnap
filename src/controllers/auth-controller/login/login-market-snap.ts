@@ -43,8 +43,7 @@ export async function login(req: Request, res: Response) {
         email: existingUser.email,
         role: existingUser.role,
       },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1d" }
+      process.env.JWT_SECRET as string
     );
 
     if (!JWTToken) {
@@ -57,8 +56,6 @@ export async function login(req: Request, res: Response) {
       .cookie("accessToken", JWTToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // hanya secure di production
-        sameSite: "lax",
-        maxAge: 1000 * 60 * 60 * 24, // 1 hari
       })
       .status(200)
       .json({
