@@ -53,7 +53,11 @@ export async function login(req: Request, res: Response) {
 
     // Set cookie dan kirim response dengan role
     res
-      .cookie("accessToken", accesstoken, { httpOnly: true, secure: false })
+      .cookie("accessToken", accesstoken, {
+        httpOnly: true,
+        secure: true, // wajib true untuk cross-origin HTTPS
+        sameSite: "none", // wajib none agar cookie dikirim lintas origin
+      })
       .status(200)
       .json({ message: "Login success" });
   } catch (error) {
