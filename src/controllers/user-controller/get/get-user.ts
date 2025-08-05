@@ -117,16 +117,16 @@ export async function getCurrentUser(
 ): Promise<void> {
   try {
     // Extract the accessToken from cookies
-    const token = req.cookies.accessToken;
+    const accessToken = req.cookies.accessToken;
 
-    if (!token) {
+    if (!accessToken) {
       res.status(401).json({ message: "Unauthorized. No token provided." });
       return;
     }
 
     // Verify and decode the JWT token to get user data (CustomJwtPayload)
     const decoded = jwt.verify(
-      token,
+      accessToken,
       process.env.JWT_SECRET!
     ) as CustomJwtPayload;
 
