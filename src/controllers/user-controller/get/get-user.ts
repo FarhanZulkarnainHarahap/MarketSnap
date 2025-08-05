@@ -127,7 +127,7 @@ export async function getCurrentUser(
     // Verify and decode the JWT token to get user data (CustomJwtPayload)
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      process.env.JWT_SECRET!
     ) as CustomJwtPayload;
 
     if (!decoded || !decoded.id) {
