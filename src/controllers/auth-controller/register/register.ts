@@ -5,6 +5,7 @@ import { prisma } from "../../../config/prisma-client.js";
 import { ZodError } from "zod";
 import { Resend } from "resend";
 import fs from "fs/promises";
+import path from "path";
 import handlebars from "handlebars";
 import { registerSchema } from "../../../validations/auth-validation.js";
 
@@ -51,7 +52,10 @@ export async function register(req: Request, res: Response) {
 
     // Kirim email untuk buat password
     const templateSource = await fs.readFile(
-      "src/templates/registration-welcoming-template.hbs",
+      path.join(
+        process.cwd(),
+        "src/templates/registration-welcoming-template.hbs"
+      ),
       "utf-8"
     );
     const compiledTemplate = handlebars.compile(templateSource);
