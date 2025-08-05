@@ -57,7 +57,8 @@ export async function login(req: Request, res: Response) {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        path: "/", // hanya secure di production
+        path: "/", 
+         maxAge: 7 * 24 * 60 * 60 * 1000,// hanya secure di production
       })
       .status(200)
       .json({
