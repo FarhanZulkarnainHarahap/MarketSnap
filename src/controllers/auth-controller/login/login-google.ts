@@ -70,7 +70,7 @@ export async function loginGoogle(req: Request, res: Response) {
       process.env.JWT_SECRET!
     );
 
-    res.cookie("accessToken", accesstoken, { httpOnly: true, secure: true });
+    res.cookie("accessToken", accesstoken, { httpOnly: true, secure: false });
     res.redirect("http://localhost:3000");
     return;
   } catch (error) {

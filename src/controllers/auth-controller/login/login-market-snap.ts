@@ -36,7 +36,7 @@ export async function login(req: Request, res: Response) {
     }
 
     // Generate JWT token
-    const JWTToken = jwt.sign(
+    const jwtToken = jwt.sign(
       {
         id: existingUser.id,
         username: existingUser.username,
@@ -46,16 +46,17 @@ export async function login(req: Request, res: Response) {
       process.env.JWT_SECRET as string
     );
 
-    if (!JWTToken) {
+    if (!jwtToken) {
       res.status(500).json({ message: "Failed to generate token" });
       return;
     }
 
     // Set cookie dan kirim response dengan role
     res
-      .cookie("accessToken", JWTToken, {
+      .cookie("accessToken", jwtToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // hanya secure di production
+        secure: true,
+        // secure: process.env.NODE_ENV === "production" , // hanya secure di production
       })
       .status(200)
       .json({
