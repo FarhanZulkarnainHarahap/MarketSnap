@@ -57,6 +57,8 @@ export async function login(req: Request, res: Response) {
         httpOnly: true,
         secure: true, // wajib true untuk cross-origin HTTPS
         sameSite: "none", // wajib none agar cookie dikirim lintas origin
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(200)
       .json({ message: "Login success" });
