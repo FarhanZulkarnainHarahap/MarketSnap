@@ -24,18 +24,6 @@ import "./config/passport.js"; // konfigurasi strategi Passport (GoogleStrategy)
 const app: Application = express();
 const PORT: string = process.env.PORT || "8000";
 
-app.get("/", async (request: Request, response: Response) => {
-  response.send({ message: "Welcome to Market Snap API" });
-});
-app.get("/api/health", async (request: Request, response: Response) => {
-  response.status(200).json({
-    message: "API is running",
-    uptime: `${process.uptime().toFixed(2)} seconds`,
-  });
-});
-app.listen(PORT, () =>
-  console.info(` 🚀 Server is listening on port: ${PORT}`)
-);
 // CORS config
 app.use(
   cors({
@@ -97,5 +85,16 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
     apiBaseUrl: process.env.NEXT_PUBLIC_DOMAIN,
   });
 });
-
+app.get("/", async (request: Request, response: Response) => {
+  response.status(200).json({ message: "Welcome to Market Snap API" });
+});
+app.get("/api/health", async (request: Request, response: Response) => {
+  response.status(200).json({
+    message: "API is running",
+    uptime: `${process.uptime().toFixed(2)} seconds`,
+  });
+});
+app.listen(PORT, () =>
+  console.info(` 🚀 Server is listening on port: ${PORT}`)
+);
 export default app;
