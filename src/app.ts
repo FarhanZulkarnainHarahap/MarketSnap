@@ -86,10 +86,7 @@ app.get("/confirm-email-view", (req: Request, res: Response) => {
   });
 });
 app.get("/", async (request: Request, response: Response) => {
-  response.send({
-    message: "API is running",
-    uptime: `${process.uptime().toFixed(2)} seconds`,
-  });
+  response.send({ message: "Welcome to Market Snap API" });
 });
 app.get("/api/health", async (request: Request, response: Response) => {
   response.status(200).json({
