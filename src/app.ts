@@ -56,7 +56,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // true jika HTTPS
+      secure: true, // true jika HTTPS
       httpOnly: true,
       sameSite: "lax",
     },
