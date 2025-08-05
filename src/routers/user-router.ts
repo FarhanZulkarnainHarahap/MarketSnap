@@ -24,7 +24,6 @@ import {
 
 const router = express.Router();
 
-router.route("/current-user").get(verifyToken, getCurrentUser);
 router
   .route("/current-user")
   .get(verifyToken, getCurrentUser)
